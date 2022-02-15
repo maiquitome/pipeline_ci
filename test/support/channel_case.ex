@@ -14,6 +14,7 @@ defmodule PipelineCiWeb.ChannelCase do
   by setting `use PipelineCiWeb.ChannelCase, async: true`, although
   this option is not recommended for other databases.
   """
+  alias Ecto.Adapters.SQL.Sandbox
 
   use ExUnit.CaseTemplate
 
@@ -29,8 +30,8 @@ defmodule PipelineCiWeb.ChannelCase do
   end
 
   setup tags do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(PipelineCi.Repo, shared: not tags[:async])
-    on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
+    pid = Sandbox.start_owner!(PipelineCi.Repo, shared: not tags[:async])
+    on_exit(fn -> Sandbox.stop_owner(pid) end)
     :ok
   end
 end
